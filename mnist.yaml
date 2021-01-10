@@ -1,0 +1,44 @@
+exp_setting:
+  exp_name: 'test_mnist'                         # Expriment title, log/checkpoint files will be named after this
+  checkpoint_dir: './checkpoint/'               # Folder for model checkpoints                            # Folder for training logs
+  data_root: './mnist_data/'
+  seed: 1
+  img_size: 32
+  img_depth: 3
+  domain_a: 'clear'
+  domain_b: 'noisy'
+
+model:
+  encoder:
+    enn: [['conv', 512,4,2,1,'bn','LeakyReLU'],
+          ['conv', 256,4,2,1,'bn','LeakyReLU'],
+          ['conv', 128,4,2,1,  '','']
+    ]
+    code_dim: 2
+    lr: 0.0001
+    betas: [0.5,0.999]
+  D_feat:
+    dnn: [['fc', 64, '', 'LeakyReLU',0],
+          ['fc', 2, '', '', 0]
+         ]
+    lr: 0.0001
+    betas: [0.5,0.999]
+
+  D_pix:
+    dnn: [['fc', 10, '', '',0]
+         ]
+    lr: 0.0001
+    betas: [0.5,0.999]
+
+trainer:
+  total_step: 2500
+  batch_size: 32
+  lambda:
+    feat_domain:
+      init:  0.1
+      final: 0.1
+      step:  1
+  checkpoint_step: 500
+  plot_step: 100
+  save_checkpoint: True
+  save_best_only: True
